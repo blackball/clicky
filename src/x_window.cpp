@@ -1,4 +1,8 @@
 #include "x_window.hpp"
+
+#include <X11/Xutil.h>
+#include <X11/Xos.h>
+
 #include <cstdio>
 #include <cstring>
 
@@ -41,11 +45,23 @@ void XWindow::Init()
 			black,
 			black
 		);
+	
+	// Set the name and other metadata of the window
+	XSetStandardProperties(
+			m_display,
+			m_window,
+			"clicky",
+			"clicky",
+			None,
+			nullptr,
+			0,
+			nullptr
+		);
 
 	XSelectInput(
 			m_display,
 			m_window,
-			ExposureMask
+			ExposureMask | KeyPressMask
 		);
 
 	// Display window
@@ -83,24 +99,16 @@ void XWindow::Loop()
 {
 	XEvent event;
 
-	const char* text   = "hello world!";
-	size_t      length = strlen(text);
-	
 	while (true)
 	{
 		XNextEvent(m_display, &event);
 
 		if (event.type == Expose)
 		{
-			XDrawString(
-					m_display,
-					m_window,
-					m_context,
-					20,
-					20,
-					text,
-					length
-				);
+		}
+
+		if (event.type == KeyPress)
+		{
 		}
 
 		if (event.type == ClientMessage)
