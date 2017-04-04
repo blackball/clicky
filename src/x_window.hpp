@@ -1,6 +1,8 @@
 #include <X11/Xlib.h>
 #include <cstdint>
 
+class LineBuffer;
+
 class XWindow
 {
 public:
@@ -24,5 +26,9 @@ private:
 	
 	uint16_t m_width;
 	uint16_t m_height;
+
+	LineBuffer* m_buffer = nullptr;
+
+	uint16_t m_column = 0;
 
 };
