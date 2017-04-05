@@ -38,8 +38,6 @@ uint16_t LineBuffer::Delete(
 {
 	Line line = _CheckColumnRow(row, column);	
 
-	const size_t length = line.text.size();
-
 	if ((column - amount) > -1)
 	{
 		m_lines[row].text.erase(m_lines[row].text.begin() + (column - amount));
