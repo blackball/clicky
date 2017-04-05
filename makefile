@@ -15,7 +15,10 @@ OBJECTS := $(SOURCES:$(SOURCE_DIR)/%.cpp=$(OBJECT_DIR)/%.o)
 
 EXECUTABLE_NAME = clicky
 
-all: clean $(OUTPUT_DIR)/$(EXECUTABLE_NAME)
+all: clean build
+	bin/clicky
+
+build: $(OUTPUT_DIR)/$(EXECUTABLE_NAME)
 
 $(OUTPUT_DIR)/$(EXECUTABLE_NAME): $(OBJECTS)
 	$(CC) $(CFLAGS) $(OBJECTS) $(LINKER) -o $(OUTPUT_DIR)/$(EXECUTABLE_NAME)
