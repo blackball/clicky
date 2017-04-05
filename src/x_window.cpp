@@ -42,10 +42,12 @@ void XWindow::Init()
 	if (!m_display)
 		printf("Failed to open the X11 Display!\n");
 
-	m_font = XftFontOpenName(
+	m_font = XftFontOpen(
 		m_display,
 		DefaultScreen(m_display),
-		"monospace"
+		XFT_FAMILY, XftTypeString, "Noto Mono",
+		XFT_SIZE,   XftTypeDouble, 11.0,
+		nullptr
 	);
 
 	int black = BlackPixel(m_display, DefaultScreen(m_display));
@@ -150,23 +152,59 @@ void XWindow::Loop()
 		{
 			Line line = m_buffer->GrabLine(0);
 
+			XftChar8*    text   = reinterpret_cast<XftChar8*>(&line.text[0]);
+			const size_t length = line.text.size();
+
+			if (!text)
+				continue;
+
+			// Grab the extents to draw the string
+			XGlyphInfo extents;
+			XftTextExtents8(
+				m_display,
+				m_font,
+				text,
+				length,
+				&extents
+			);
+
 			XftDrawString8(
 				m_draw,
 				&m_fontColor,
 				m_font,
-				20,
-				20,
-				reinterpret_cast<XftChar8*>(&line.text[0]),
-				line.text.size()
-			);	
+				20 + extents.x,
+				20 + extents.y,
+				text,
+				length
+			);
+
+			// Grab the extents to draw the caret	
+			XftTextExtents8(
+				m_display,
+				m_font,
+				text,
+				m_column,
+				&extents
+			);
+
+			// Additionally, get an extent of the current character at
+			// the column, as to size the caret dynamically
+			XGlyphInfo characterExtents;
+			XftTextExtents8(
+				m_display,
+				m_font,
+				&text[m_column],
+				1,
+				&characterExtents
+			);
 
 			XFillRectangle(
 				m_display,
 				m_window,
 				m_context,
-				20 + (m_column * 2),
-				20,
-				4,
+				20 + extents.x + (extents.width - characterExtents.width),
+				20 + extents.y + 4,
+				characterExtents.width,
 				2
 			);
 		}
@@ -194,6 +232,10 @@ void XWindow::Loop()
 					m_column,
 					1
 				);
+			}
+			else if (sym == XK_Escape)
+			{
+				break;
 			}
 			else
 			{
