@@ -4,7 +4,7 @@ CFLAGS   = -g -Wall
 INCLUDES = -I/usr/include/freetype2
 
 # Link to X11, Xft
-LINKER = -lX11 -lXft -lstdc++
+LINKER = -lX11 -lXft -std=c++11
 
 SOURCE_DIR = src
 OUTPUT_DIR = bin
