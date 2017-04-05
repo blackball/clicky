@@ -1,5 +1,6 @@
 #include <X11/Xlib.h>
 #include <cstdint>
+#include <X11/Xft/Xft.h>
 
 class LineBuffer;
 
@@ -20,6 +21,12 @@ private:
 	Window m_window;
 
 	GC m_context;
+
+	XftFont* m_font;
+	XftDraw* m_draw;
+
+	XRenderColor m_fontRenderColor;
+	XftColor     m_fontColor;
 
 	uint16_t m_x;
 	uint16_t m_y;

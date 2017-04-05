@@ -18,9 +18,36 @@ void LineBuffer::Insert(
 	m_lines[row].text.insert(m_lines[row].text.begin() + column, append);
 }
 
-void LineBuffer::Delete(int16_t row, int16_t column)
+void LineBuffer::Insert(
+	int16_t row,
+	int16_t column,
+	char* append,
+	size_t length
+)
+{
+	Line line = _CheckColumnRow(row, column);
+
+	m_lines[row].text.insert(m_lines[row].text.begin() + column, append, append + length);
+}
+
+uint16_t LineBuffer::Delete(
+	int16_t row,
+	int16_t column,
+	int16_t amount
+)
 {
 	Line line = _CheckColumnRow(row, column);	
+
+	const size_t length = line.text.size();
+
+	if ((column - amount) > -1)
+	{
+		m_lines[row].text.erase(m_lines[row].text.begin() + (column - amount));
+	
+		return (column - amount);
+	}
+
+	return column;
 }
 
 Line LineBuffer::_CheckColumnRow(int16_t row, int16_t column)

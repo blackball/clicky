@@ -16,12 +16,23 @@ public:
 	LineBuffer();
 	
 	void Insert(
-			int16_t row,
-			int16_t column,
-			char append
-		);
+		int16_t row,
+		int16_t column,
+		char append
+	);
+	
+	void Insert(
+		int16_t row,
+		int16_t column,
+		char* append,
+		size_t length
+	);
 
-	void Delete(int16_t row, int16_t column);
+	uint16_t Delete(
+		int16_t row,
+		int16_t column,
+		int16_t amount	
+	);
 
 	inline size_t LineCount()
 	{
